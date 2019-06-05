@@ -25,13 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        bmicalc.cpp \
         main.cpp \
         mainwindow.cpp
 
 HEADERS += \
+        bmicalc.h \
         mainwindow.h
 
 FORMS += \
+        bmicalc.ui \
         mainwindow.ui
 
 # Default rules for deployment.

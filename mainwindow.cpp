@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "bmicalc.h"
+
 #include <QMessageBox>
 #include <QCloseEvent>
 
@@ -37,7 +39,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_actionBMI_triggered()
 {
-    QMessageBox::about(this, "IxTrak", "BMI calculator not implemented");
+    BMICalc *bmi;
+
+    bmi = new BMICalc(this);
+    bmi->exec();
+    delete bmi;
+    //QMessageBox::about(this, "IxTrak", "BMI calculator not implemented");
 }
 
 void MainWindow::on_actionImport_triggered()
