@@ -36,6 +36,7 @@
      <string>Calculators</string>
     </property>
     <addaction name="actionBMI"/>
+    <addaction name="actionTLco"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -74,6 +75,11 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionTLco">
+   <property name="text">
+    <string>TLco</string>
    </property>
   </action>
  </widget>

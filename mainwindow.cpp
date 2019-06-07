@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "bmicalc.h"
+#include "tlcocalc.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -11,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    load_phys_limits();
 }
 
 MainWindow::~MainWindow()
@@ -55,4 +58,28 @@ void MainWindow::on_actionImport_triggered()
 void MainWindow::on_actionQuit_triggered()
 {
     qApp->quit();
+}
+
+void MainWindow::on_actionTLco_triggered()
+{
+    tlcocalc *tlco;
+
+    tlco = new tlcocalc(this);
+    tlco->exec();
+    delete tlco;
+}
+
+double MainWindow::validate_physiology(QString s, double val)
+{
+    return limits.validate(s, val);
+}
+
+void MainWindow::load_phys_limits()
+{
+    // Hack for now
+    limits.setlimit("Height", 100, 230);
+    limits.setlimit("Weight", 30, 300);
+    limits.setlimit("Haemoglobin", 2.0, 22.0);
+    limits.setlimit("TLco", 2.0, 18.0);
+    limits.setlimit("Haematocrit", 10, 75);
 }

@@ -27,15 +27,20 @@ CONFIG += c++11
 SOURCES += \
         bmicalc.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        physiology.cpp \
+        tlcocalc.cpp
 
 HEADERS += \
         bmicalc.h \
-        mainwindow.h
+        mainwindow.h \
+        physiology.h \
+        tlcocalc.h
 
 FORMS += \
         bmicalc.ui \
-        mainwindow.ui
+        mainwindow.ui \
+        tlcocalc.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

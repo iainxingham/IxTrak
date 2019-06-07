@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "physiology.h"
+
 #include <QMainWindow>
 
 namespace Ui {
@@ -11,9 +13,14 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+private:
+    physiology limits;
+
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    double validate_physiology(QString s, double val);
 
 private slots:
     void on_actionAbout_triggered();
@@ -24,9 +31,13 @@ private slots:
 
     void on_actionQuit_triggered();
 
+    void on_actionTLco_triggered();
+
 private:
     Ui::MainWindow *ui;
     void closeEvent(QCloseEvent *event);
+
+    void load_phys_limits();
 };
 
 #endif // MAINWINDOW_H
