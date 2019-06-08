@@ -6,6 +6,9 @@
 
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QFile>
+#include <QTextStream>
+#include <QStringList>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    load_phys_limits();
+    //load_phys_limits();
+    load_config();
 }
 
 MainWindow::~MainWindow()
@@ -47,7 +51,6 @@ void MainWindow::on_actionBMI_triggered()
     bmi = new BMICalc(this);
     bmi->exec();
     delete bmi;
-    //QMessageBox::about(this, "IxTrak", "BMI calculator not implemented");
 }
 
 void MainWindow::on_actionImport_triggered()
@@ -82,4 +85,52 @@ void MainWindow::load_phys_limits()
     limits.setlimit("Haemoglobin", 2.0, 22.0);
     limits.setlimit("TLco", 2.0, 18.0);
     limits.setlimit("Haematocrit", 10, 75);
+}
+
+bool MainWindow::load_config()
+{
+    QFile file(CONFIG_FILE_NAME);
+    QTextStream in;
+    QMessageBox msg;
+    QString line;
+    QStringList strlist;
+
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        msg.setWindowTitle("Error");
+        msg.setText("Unable to open configuration file");
+        msg.setIcon(QMessageBox::Critical);
+        msg.exec();
+
+        return false;
+    }
+
+    in.setDevice(&file);
+    msg.setWindowTitle("Debug");
+    msg.setIcon(QMessageBox::Warning);
+    while (!in.atEnd()) {
+        line = in.readLine();
+
+        // Handle comments
+        if(line.startsWith("#")) continue;      // '#' for comments
+
+        // Handle physiology limits
+        if(line.startsWith("Physiology limits:")) {
+            line = in.readLine();
+            while (line.startsWith(" ") || line.startsWith("\t")){
+                if(line.trimmed().startsWith("#")) {
+                    line = in.readLine();
+                    continue;
+                }
+                strlist = line.split(",");
+                if(strlist.size() >= 3) {       // >= 3 to allow for trailing comments
+                    limits.setlimit(strlist[0].trimmed(), strlist[1].toDouble(), strlist[2].toDouble());
+                }
+                line = in.readLine();
+            }
+        }
+
+        // Other configs here as else ifs
+    }
+
+    return true;
 }

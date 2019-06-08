@@ -5,6 +5,8 @@
 
 #include <QMainWindow>
 
+#define CONFIG_FILE_NAME    "ixtrak.cfg"
+
 namespace Ui {
 class MainWindow;
 }
@@ -38,6 +40,7 @@ private:
     void closeEvent(QCloseEvent *event);
 
     void load_phys_limits();
+    bool load_config();
 };
 
 #endif // MAINWINDOW_H
