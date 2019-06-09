@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,6 +26,7 @@ CONFIG += c++11
 
 SOURCES += \
         bmicalc.cpp \
+        insertphys.cpp \
         main.cpp \
         mainwindow.cpp \
         physiology.cpp \
@@ -33,12 +34,14 @@ SOURCES += \
 
 HEADERS += \
         bmicalc.h \
+        insertphys.h \
         mainwindow.h \
         physiology.h \
         tlcocalc.h
 
 FORMS += \
         bmicalc.ui \
+        insertphys.ui \
         mainwindow.ui \
         tlcocalc.ui
 

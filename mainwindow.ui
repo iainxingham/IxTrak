@@ -44,7 +44,14 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuInsert">
+    <property name="title">
+     <string>Insert</string>
+    </property>
+    <addaction name="actionPhysiology"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuInsert"/>
    <addaction name="menuCalculators"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -80,6 +87,11 @@
   <action name="actionTLco">
    <property name="text">
     <string>TLco</string>
+   </property>
+  </action>
+  <action name="actionPhysiology">
+   <property name="text">
+    <string>Physiology</string>
    </property>
   </action>
  </widget>

@@ -3,12 +3,19 @@
 
 #include "bmicalc.h"
 #include "tlcocalc.h"
+#include "insertphys.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QDateTime>
+#include <QDebug>
+
+const QString DRIVER("QSQLITE");
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //load_phys_limits();
     load_config();
+    init_db_connection();
 }
 
 MainWindow::~MainWindow()
@@ -127,10 +135,128 @@ bool MainWindow::load_config()
                 }
                 line = in.readLine();
             }
+            continue;   // This means a blank line is needed following the end of physiology limits
+        }
+
+        // Load database path
+        if(line.startsWith("Database:")) {
+            line = in.readLine();
+            while (line.trimmed().startsWith("#")) line = in.readLine();
+            strlist = line.trimmed().split("#");
+            if(QFile::exists(strlist[0].trimmed())) db_path = strlist[0].trimmed();
+            continue;
         }
 
         // Other configs here as else ifs
     }
+
+    return true;
+}
+
+bool MainWindow::init_db_connection()
+{
+    if(!QSqlDatabase::isDriverAvailable(DRIVER)) {
+        QMessageBox msg;
+
+        msg.setWindowTitle("Error");
+        msg.setText("Database driver unavailable");
+        msg.setIcon(QMessageBox::Critical);
+        msg.exec();
+
+        return false;
+    }
+
+    db = db.addDatabase(DRIVER);
+    db.setDatabaseName(db_path);
+
+    if(!db.open()) {
+        QMessageBox msg;
+
+        msg.setWindowTitle("Error");
+        msg.setText("Can't open database");
+        msg.setIcon(QMessageBox::Critical);
+        msg.exec();
+
+        return false;
+    }
+
+    return true;
+}
+
+void MainWindow::on_actionPhysiology_triggered()
+{
+    insertphys *phys;
+
+    phys = new insertphys(this);
+    phys->exec();
+    delete phys;
+}
+
+int MainWindow::db_get_rxr(QString rxr)
+{
+    QSqlQuery query;
+
+    query.prepare("SELECT id FROM pats WHERE rxr = ?");
+    query.addBindValue(rxr);
+    query.exec();
+
+    if(query.first()) return query.value(0).toInt();
+    return -1;
+}
+
+void MainWindow::db_insert_rxr(QString rxr, QString nhs)
+{
+    QSqlQuery query;
+
+    if(db_get_rxr(rxr) != -1) return;
+
+    query.prepare("INSERT INTO pats (rxr, nhs) VALUES (:rxr_num, :nhs_num)");
+    query.bindValue(":rxr_num", rxr);
+    query.bindValue(":nhs_num", nhs);
+    query.exec();
+}
+
+void MainWindow::db_insert_physiology(QString rxr, QString type, double val, double high, double low)
+{
+    int rxr_id, phys_id;
+    QSqlQuery query;
+    QDateTime dt;
+
+    rxr_id = db_get_rxr(rxr);
+    if(rxr_id == -1) {
+        db_insert_rxr(rxr);
+        rxr_id = db_get_rxr(rxr);
+    }
+
+    query.prepare("SELECT id FROM phys_types WHERE measure = :phys");
+    query.bindValue(":phys", type);
+    query.exec();
+    if(!query.first()) return;
+
+    phys_id = query.value(0).toInt();
+
+    if(high <= low) {   // ie no normal range values
+        query.prepare("INSERT INTO physiology (pat_id, phys_date, phys_type, phys_value) "
+                      "VALUES (:rxr_id, :cur_date, :phys, :val)");
+    }
+    else {
+        query.prepare("INSERT INTO physiology (pat_id, phys_date, phys_type, phys_value, ref_high, ref_low) "
+                      "VALUES (:rxr_id, :cur_date, :phys, :val, :high, :low)");
+        query.bindValue(":high", high);
+        query.bindValue(":low", low);
+    }
+    query.bindValue(":rxr_id", rxr_id);
+    query.bindValue(":cur_date", dt.currentDateTime().toString("dd:MM:yyyy hh:mm t"));
+    query.bindValue(":phys", phys_id);
+    query.bindValue(":val", val);
+
+    query.exec();
+}
+
+bool MainWindow::valid_rxr(QString rxr)
+{
+    if(!rxr.startsWith("rxr")) return false;
+    if(rxr.length() != 10) return false;
 
     return true;
 }
