@@ -31,6 +31,7 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         physiology.cpp \
+        preclinic.cpp \
         tlcocalc.cpp
 
 HEADERS += \
@@ -39,6 +40,7 @@ HEADERS += \
         insertphys.h \
         mainwindow.h \
         physiology.h \
+        preclinic.h \
         tlcocalc.h
 
 FORMS += \
@@ -46,6 +48,7 @@ FORMS += \
         convert.ui \
         insertphys.ui \
         mainwindow.ui \
+        preclinic.ui \
         tlcocalc.ui
 
 # Default rules for deployment.

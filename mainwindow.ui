@@ -50,6 +50,7 @@
      <string>Insert</string>
     </property>
     <addaction name="actionPhysiology"/>
+    <addaction name="actionPre_clinic_Ix"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuInsert"/>
@@ -98,6 +99,11 @@
   <action name="actionMetric_to_Imperial">
    <property name="text">
     <string>Metric to Imperial</string>
+   </property>
+  </action>
+  <action name="actionPre_clinic_Ix">
+   <property name="text">
+    <string>Pre clinic Ix</string>
    </property>
   </action>
  </widget>

@@ -5,6 +5,7 @@
 #include "tlcocalc.h"
 #include "insertphys.h"
 #include "convert.h"
+#include "preclinic.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -269,4 +270,31 @@ void MainWindow::on_actionMetric_to_Imperial_triggered()
     conv = new convert(this);
     conv->exec();
     delete conv;
+}
+
+void MainWindow::on_actionPre_clinic_Ix_triggered()
+{
+    preclinic *preclin;
+
+    preclin = new preclinic(this);
+    preclin->exec();
+    delete preclin;
+}
+
+void MainWindow::db_insert_preclinic(QString rxr, QString nhs, QString test)
+{
+    int rxr_id;
+    QSqlQuery query;
+    QDateTime dt;
+
+    rxr_id = db_get_rxr(rxr);
+    if(rxr_id == -1) {
+        db_insert_rxr(rxr, nhs);
+        rxr_id = db_get_rxr(rxr);
+    }
+
+    // Work here
+    // Look up test in inv_types
+    // Create interaction
+    // Write test to investigation
 }

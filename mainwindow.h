@@ -28,6 +28,7 @@ public:
     double validate_physiology(QString s, double val);
     void db_insert_physiology(QString rxr, QString type, double val, double high=0, double low=0);
     bool valid_rxr(QString rxr);
+    void db_insert_preclinic(QString rxr, QString nhs, QString test);
 
 private slots:
     void on_actionAbout_triggered();
@@ -43,6 +44,8 @@ private slots:
     void on_actionPhysiology_triggered();
 
     void on_actionMetric_to_Imperial_triggered();
+
+    void on_actionPre_clinic_Ix_triggered();
 
 private:
     Ui::MainWindow *ui;

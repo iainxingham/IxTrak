@@ -2,7 +2,6 @@
 #include "ui_convert.h"
 
 #include <QtMath>
-#include <math.h>
 
 convert::convert(QWidget *parent) :
     QDialog(parent),
