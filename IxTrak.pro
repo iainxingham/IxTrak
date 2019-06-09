@@ -26,6 +26,7 @@ CONFIG += c++11
 
 SOURCES += \
         bmicalc.cpp \
+        convert.cpp \
         insertphys.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
 
 HEADERS += \
         bmicalc.h \
+        convert.h \
         insertphys.h \
         mainwindow.h \
         physiology.h \
@@ -41,6 +43,7 @@ HEADERS += \
 
 FORMS += \
         bmicalc.ui \
+        convert.ui \
         insertphys.ui \
         mainwindow.ui \
         tlcocalc.ui

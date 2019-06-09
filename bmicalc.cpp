@@ -50,7 +50,7 @@ void BMICalc::on_calcButton_clicked()
         ui->bmiLabel->setNum(bmi);
         ui->primeLabel->setNum(bmi/25.0);
         str = "%1 to %2";
-        str = str.arg(QString::number(18.5 * height * height), QString::number(25.0 * height * height));
+        str = str.arg(QString::number(18.5 * height * height, 'f', 2), QString::number(25.0 * height * height, 'f', 2));
         ui->normalLabel->setText(str);
         ui->categoryLabel->setText(BMItoClass(bmi));
     }

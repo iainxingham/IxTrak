@@ -4,6 +4,7 @@
 #include "bmicalc.h"
 #include "tlcocalc.h"
 #include "insertphys.h"
+#include "convert.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -259,4 +260,13 @@ bool MainWindow::valid_rxr(QString rxr)
     if(rxr.length() != 10) return false;
 
     return true;
+}
+
+void MainWindow::on_actionMetric_to_Imperial_triggered()
+{
+    convert *conv;
+
+    conv = new convert(this);
+    conv->exec();
+    delete conv;
 }

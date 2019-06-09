@@ -37,6 +37,7 @@
     </property>
     <addaction name="actionBMI"/>
     <addaction name="actionTLco"/>
+    <addaction name="actionMetric_to_Imperial"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -86,12 +87,17 @@
   </action>
   <action name="actionTLco">
    <property name="text">
-    <string>TLco</string>
+    <string>Adjust TLco for Hb</string>
    </property>
   </action>
   <action name="actionPhysiology">
    <property name="text">
     <string>Physiology</string>
+   </property>
+  </action>
+  <action name="actionMetric_to_Imperial">
+   <property name="text">
+    <string>Metric to Imperial</string>
    </property>
   </action>
  </widget>

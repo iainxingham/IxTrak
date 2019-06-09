@@ -42,6 +42,8 @@ private slots:
 
     void on_actionPhysiology_triggered();
 
+    void on_actionMetric_to_Imperial_triggered();
+
 private:
     Ui::MainWindow *ui;
     void closeEvent(QCloseEvent *event);
