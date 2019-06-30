@@ -125,6 +125,7 @@ int Singleton::db_lookup_or_add(QString table, QString val)
     qu_str = qu_str.arg(table);
     query.prepare(qu_str);
     query.bindValue(":val", val);
+    query.exec();
 
     if(query.first()) return query.value(0).toInt();
 
@@ -204,4 +205,73 @@ void Singleton::db_insert_physiology(QString rxr, QString type, double val, doub
     query.bindValue(":val", val);
 
     query.exec();
+
+    entered.append(rxr + " - physiology: " + type);
+}
+
+/*  Slightly hacky return type holding
+ *
+ *     < <rxr_id, interaction_id>, datetime string >
+ *
+ *  as nested QPairs
+ */
+QPair<QPair<int, int>, QString> Singleton::db_insert_preclinic_interaction(QString rxr, QString nhs)
+{
+    int rxr_id, contact_num, int_num;
+    QSqlQuery query;
+    QDateTime dt;
+    QString cur_dt;
+
+    rxr_id = db_get_rxr(rxr);
+    if(rxr_id == -1) {
+        db_insert_rxr(rxr, nhs);
+        rxr_id = db_get_rxr(rxr);
+    }
+
+    contact_num = db_lookup_or_add("contact_types", "Pre clinic investigation");
+    cur_dt = dt.currentDateTime().toString("dd:MM:yyyy hh:mm t");
+
+    query.prepare("INSERT INTO interaction (interact_date, pat_id, interact_type) "
+                  "VALUES (:int_date, :pat_id, :contact)");
+    query.bindValue(":int_date", cur_dt);
+    query.bindValue(":pat_id", rxr_id);
+    query.bindValue(":contact", contact_num);
+    query.exec();
+
+    query.exec("SELECT id FROM interaction WHERE ROWID = (SELECT last_insert_rowid())");
+    query.first();
+    int_num = query.value(0).toInt();
+
+    return qMakePair(qMakePair(rxr_id, int_num), cur_dt);
+}
+
+void Singleton::db_insert_preclinic_ix(QPair<QPair<int, int>, QString> details, QString test)
+{
+    QSqlQuery query;
+    int test_num;
+
+    test_num = db_lookup_or_add("inv_types", test);
+    query.prepare("INSERT INTO investigation (pat_id, interact_id, inv_type, request_date) "
+                  "VALUES (:pat_id, :int_num, :test_num, :int_date)");
+    query.bindValue(":int_date", details.second);
+    query.bindValue(":pat_id", details.first.first);
+    query.bindValue(":test_num", test_num);
+    query.bindValue(":int_num", details.first.second);
+    query.exec();
+}
+
+void Singleton::log_db_entry(QString s)
+{
+    entered.append(s);
+}
+
+QString Singleton::get_logs()
+{
+    QString ret = "";
+
+    for (int i = 0; i < entered.size(); ++i) {
+        ret += (entered.at(i) + "\n");
+    }
+
+    return ret;
 }

@@ -24,6 +24,7 @@ private:
     Ui::preclinic *ui;
 
     void insert_ix();
+    void set_entry_log();
 };
 
 #endif // PRECLINIC_H
