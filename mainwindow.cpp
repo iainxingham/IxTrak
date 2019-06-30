@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    db.close();
     delete ui;
 }
 
@@ -87,16 +88,6 @@ double MainWindow::validate_physiology(QString s, double val)
     return limits.validate(s, val);
 }
 
-void MainWindow::load_phys_limits()
-{
-    // Hack for now
-    limits.setlimit("Height", 100, 230);
-    limits.setlimit("Weight", 30, 300);
-    limits.setlimit("Haemoglobin", 2.0, 22.0);
-    limits.setlimit("TLco", 2.0, 18.0);
-    limits.setlimit("Haematocrit", 10, 75);
-}
-
 bool MainWindow::load_config()
 {
     QFile file(CONFIG_FILE_NAME);
@@ -134,6 +125,7 @@ bool MainWindow::load_config()
                 strlist = line.split(",");
                 if(strlist.size() >= 3) {       // >= 3 to allow for trailing comments
                     limits.setlimit(strlist[0].trimmed(), strlist[1].toDouble(), strlist[2].toDouble());
+                    //qDebug() << "Physiology: " << strlist[0].trimmed() << " min: " << strlist[1].toDouble() << " max: " << strlist[2].toDouble();
                 }
                 line = in.readLine();
             }
@@ -233,6 +225,7 @@ void MainWindow::db_insert_physiology(QString rxr, QString type, double val, dou
     query.prepare("SELECT id FROM phys_types WHERE measure = :phys");
     query.bindValue(":phys", type);
     query.exec();
+
     if(!query.first()) return;
 
     phys_id = query.value(0).toInt();
@@ -283,9 +276,10 @@ void MainWindow::on_actionPre_clinic_Ix_triggered()
 
 void MainWindow::db_insert_preclinic(QString rxr, QString nhs, QString test)
 {
-    int rxr_id;
+    int rxr_id, test_num, contact_num, int_num;
     QSqlQuery query;
     QDateTime dt;
+    QString cur_dt;
 
     rxr_id = db_get_rxr(rxr);
     if(rxr_id == -1) {
@@ -293,8 +287,83 @@ void MainWindow::db_insert_preclinic(QString rxr, QString nhs, QString test)
         rxr_id = db_get_rxr(rxr);
     }
 
-    // Work here
-    // Look up test in inv_types
-    // Create interaction
-    // Write test to investigation
+    test_num = db_lookup_or_add("inv_types", test);
+    contact_num = db_lookup_or_add("contact_types", "Pre clinic investigation");
+    cur_dt = dt.currentDateTime().toString("dd:MM:yyyy hh:mm t");
+
+    query.prepare("INSERT INTO interaction (interact_date, pat_id, interact_type) "
+                  "VALUES (:int_date, :pat_id, :contact)");
+    query.bindValue(":int_date", cur_dt);
+    query.bindValue(":pat_id", rxr_id);
+    query.bindValue(":contact", contact_num);
+    query.exec();
+
+    query.exec("SELECT id FROM interaction WHERE ROWID = (SELECT last_insert_rowid())");
+    query.first();
+    int_num = query.value(0).toInt();
+    qDebug() << "Interaction id: " << int_num;
+    qDebug() << "Test_num: " << test_num;
+
+    query.prepare("INSERT INTO investigation (pat_id, interact_id, inv_type, request_date) "
+                  "VALUES (:pat_id, :int_num, :test_num, :int_date)");
+    query.bindValue(":int_date", cur_dt);
+    query.bindValue(":pat_id", rxr_id);
+    query.bindValue(":test_num", test_num);
+    query.bindValue(":int_num", int_num);
+    query.exec();
+}
+
+// Works for
+//   - inv_types
+//   - clin_grades
+//   - contact_types
+//   - disp_types
+int MainWindow::db_lookup_or_add(QString table, QString val)
+{
+    QSqlQuery query;
+    QString qu_str = "SELECT id FROM %1 WHERE name = :val";
+
+    /* Not sure why can't use bindValue() in FROM part of SQL statement but it doesn't work.
+     *
+     * if(table == "inv_types") query.prepare("SELECT id FROM inv_types WHERE name = :val");
+    else if(table == "contact_types") query.prepare("SELECT id FROM contact_types WHERE name = :val");
+    else if(table == "disp_types") query.prepare("SELECT id FROM disp_types WHERE name = :val");*/
+
+    //query.prepare("SELECT id FROM :tbl WHERE name = :val");
+    //query.bindValue(":tbl", table);
+    qu_str = qu_str.arg(table);
+    query.prepare(qu_str);
+    query.bindValue(":val", val);
+
+    if(query.first()) return query.value(0).toInt();
+
+    qu_str = "INSERT INTO %1 (name) VALUES (:val)";
+    qu_str = qu_str.arg(table);
+    query.prepare(qu_str);
+    query.bindValue(":val", val);
+    //query.bindValue(":table", table);
+    query.exec();
+
+    //query.prepare("SELECT id FROM :table WHERE name = :val");
+    //query.bindValue(":val", val);
+    //query.bindValue(":table", table);
+    //query.exec();
+
+    qu_str = "SELECT id FROM %1 WHERE ROWID = (SELECT last_insert_rowid())";
+    qu_str = qu_str.arg(table);
+    query.prepare(qu_str);
+    query.exec();
+    //qDebug() << "First; " << query.first() << "Last row: " << query.value(0).toInt();
+    query.first();
+    return query.value(0).toInt();
+}
+
+bool MainWindow::db_isOK()
+{
+    if(!db.open()) {
+        qDebug() << "Database isn't open";
+        return false;
+    }
+
+    return true;
 }

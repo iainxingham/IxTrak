@@ -55,6 +55,8 @@ void preclinic::insert_ix()
     nhs_num = ui->nhsEdit->text();
     if(nhs_num == "") nhs_num = "NULL";
 
+    // Will be separate interactions if multiple Ix requested
+    // Deal with by refactoring to take db out of mainwindow.cpp?
     if(ui->oxiCheck->isChecked())
         mw->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "Overnight oximetry");
     if(ui->domiCheck->isChecked())

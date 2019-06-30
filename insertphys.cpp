@@ -3,6 +3,8 @@
 
 #include "mainwindow.h"
 
+#include <QDebug>
+
 insertphys::insertphys(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::insertphys)

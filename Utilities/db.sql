@@ -128,6 +128,7 @@ INSERT INTO "contact_types"("name") VALUES ("Radiology meeting");
 INSERT INTO "contact_types"("name") VALUES ("Ad hoc");
 INSERT INTO "contact_types"("name") VALUES ("Administration");
 INSERT INTO "contact_types"("name") VALUES ("Advice and guidance");
+INSERT INTO "contact_types"("name") VALUES ("Telephone consultation");
 
 INSERT INTO "disp_types"("name") VALUES ("Discharge");
 INSERT INTO "disp_types"("name") VALUES ("Follow up");

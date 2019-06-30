@@ -51,12 +51,13 @@ private:
     Ui::MainWindow *ui;
     void closeEvent(QCloseEvent *event);
 
-    void load_phys_limits();
     bool load_config();
     bool init_db_connection();
 
     int db_get_rxr(QString rxr);
     void db_insert_rxr(QString rxr, QString nhs="NULL");
+    int db_lookup_or_add(QString table, QString val);
+    bool db_isOK();
 };
 
 #endif // MAINWINDOW_H
