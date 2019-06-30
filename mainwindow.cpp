@@ -6,18 +6,19 @@
 #include "insertphys.h"
 #include "convert.h"
 #include "preclinic.h"
+#include "singleton.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QDateTime>
+//#include <QSqlDatabase>
+//#include <QSqlQuery>
+//#include <QDateTime>
 #include <QDebug>
 
-const QString DRIVER("QSQLITE");
+//const QString DRIVER("QSQLITE");
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,14 +26,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //load_phys_limits();
+    IxTrak = new Singleton();
     load_config();
-    init_db_connection();
+    IxTrak->db_init_connection();
 }
 
 MainWindow::~MainWindow()
 {
-    db.close();
+    delete IxTrak;
     delete ui;
 }
 
@@ -83,10 +84,10 @@ void MainWindow::on_actionTLco_triggered()
     delete tlco;
 }
 
-double MainWindow::validate_physiology(QString s, double val)
+/*double MainWindow::validate_physiology(QString s, double val)
 {
     return limits.validate(s, val);
-}
+}*/
 
 bool MainWindow::load_config()
 {
@@ -124,7 +125,7 @@ bool MainWindow::load_config()
                 }
                 strlist = line.split(",");
                 if(strlist.size() >= 3) {       // >= 3 to allow for trailing comments
-                    limits.setlimit(strlist[0].trimmed(), strlist[1].toDouble(), strlist[2].toDouble());
+                    IxTrak->set_physiology_limit(strlist[0].trimmed(), strlist[1].toDouble(), strlist[2].toDouble());
                     //qDebug() << "Physiology: " << strlist[0].trimmed() << " min: " << strlist[1].toDouble() << " max: " << strlist[2].toDouble();
                 }
                 line = in.readLine();
@@ -137,7 +138,7 @@ bool MainWindow::load_config()
             line = in.readLine();
             while (line.trimmed().startsWith("#")) line = in.readLine();
             strlist = line.trimmed().split("#");
-            if(QFile::exists(strlist[0].trimmed())) db_path = strlist[0].trimmed();
+            if(QFile::exists(strlist[0].trimmed())) IxTrak->set_db_path(strlist[0].trimmed());
             continue;
         }
 
@@ -147,7 +148,7 @@ bool MainWindow::load_config()
     return true;
 }
 
-bool MainWindow::init_db_connection()
+/*bool MainWindow::init_db_connection()
 {
     if(!QSqlDatabase::isDriverAvailable(DRIVER)) {
         QMessageBox msg;
@@ -175,7 +176,7 @@ bool MainWindow::init_db_connection()
     }
 
     return true;
-}
+}*/
 
 void MainWindow::on_actionPhysiology_triggered()
 {
@@ -186,7 +187,7 @@ void MainWindow::on_actionPhysiology_triggered()
     delete phys;
 }
 
-int MainWindow::db_get_rxr(QString rxr)
+/*int MainWindow::db_get_rxr(QString rxr)
 {
     QSqlQuery query;
 
@@ -196,9 +197,9 @@ int MainWindow::db_get_rxr(QString rxr)
 
     if(query.first()) return query.value(0).toInt();
     return -1;
-}
+}*/
 
-void MainWindow::db_insert_rxr(QString rxr, QString nhs)
+/*void MainWindow::db_insert_rxr(QString rxr, QString nhs)
 {
     QSqlQuery query;
 
@@ -208,9 +209,9 @@ void MainWindow::db_insert_rxr(QString rxr, QString nhs)
     query.bindValue(":rxr_num", rxr);
     query.bindValue(":nhs_num", nhs);
     query.exec();
-}
+}*/
 
-void MainWindow::db_insert_physiology(QString rxr, QString type, double val, double high, double low)
+/*void MainWindow::db_insert_physiology(QString rxr, QString type, double val, double high, double low)
 {
     int rxr_id, phys_id;
     QSqlQuery query;
@@ -246,15 +247,15 @@ void MainWindow::db_insert_physiology(QString rxr, QString type, double val, dou
     query.bindValue(":val", val);
 
     query.exec();
-}
+}*/
 
-bool MainWindow::valid_rxr(QString rxr)
+/*bool MainWindow::valid_rxr(QString rxr)
 {
     if(!rxr.startsWith("rxr")) return false;
     if(rxr.length() != 10) return false;
 
     return true;
-}
+}*/
 
 void MainWindow::on_actionMetric_to_Imperial_triggered()
 {
@@ -274,7 +275,7 @@ void MainWindow::on_actionPre_clinic_Ix_triggered()
     delete preclin;
 }
 
-void MainWindow::db_insert_preclinic(QString rxr, QString nhs, QString test)
+/*void MainWindow::db_insert_preclinic(QString rxr, QString nhs, QString test)
 {
     int rxr_id, test_num, contact_num, int_num;
     QSqlQuery query;
@@ -311,17 +312,17 @@ void MainWindow::db_insert_preclinic(QString rxr, QString nhs, QString test)
     query.bindValue(":test_num", test_num);
     query.bindValue(":int_num", int_num);
     query.exec();
-}
+}*/
 
 // Works for
 //   - inv_types
 //   - clin_grades
 //   - contact_types
 //   - disp_types
-int MainWindow::db_lookup_or_add(QString table, QString val)
+/*int MainWindow::db_lookup_or_add(QString table, QString val)
 {
     QSqlQuery query;
-    QString qu_str = "SELECT id FROM %1 WHERE name = :val";
+    QString qu_str = "SELECT id FROM %1 WHERE name = :val";*/
 
     /* Not sure why can't use bindValue() in FROM part of SQL statement but it doesn't work.
      *
@@ -331,7 +332,7 @@ int MainWindow::db_lookup_or_add(QString table, QString val)
 
     //query.prepare("SELECT id FROM :tbl WHERE name = :val");
     //query.bindValue(":tbl", table);
-    qu_str = qu_str.arg(table);
+ /*   qu_str = qu_str.arg(table);
     query.prepare(qu_str);
     query.bindValue(":val", val);
 
@@ -356,9 +357,9 @@ int MainWindow::db_lookup_or_add(QString table, QString val)
     //qDebug() << "First; " << query.first() << "Last row: " << query.value(0).toInt();
     query.first();
     return query.value(0).toInt();
-}
+}*/
 
-bool MainWindow::db_isOK()
+/*bool MainWindow::db_isOK()
 {
     if(!db.open()) {
         qDebug() << "Database isn't open";
@@ -367,3 +368,4 @@ bool MainWindow::db_isOK()
 
     return true;
 }
+*/

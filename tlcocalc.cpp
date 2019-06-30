@@ -1,6 +1,8 @@
 #include "tlcocalc.h"
 #include "ui_tlcocalc.h"
-#include "mainwindow.h"
+//#include "mainwindow.h"
+
+#include "singleton.h"
 
 #include <QMessageBox>
 
@@ -21,21 +23,21 @@ void tlcocalc::on_calculateButton_clicked()
     double hb, hct, predTLco, measTLco;
     double cotes, dina, marr, moh;
     bool ok;
-    MainWindow *mw;
+    //MainWindow *mw;
 
-    mw = qobject_cast<MainWindow*> (this->parent());
+    //mw = qobject_cast<MainWindow*> (this->parent());
 
     hb = ui->hbLine->text().toDouble(&ok);
-    if(ok) hb = mw->validate_physiology("Haemoglobin", hb);
+    if(ok) hb = IxTrak->validate_physiology("Haemoglobin", hb);
 
     hct = ui->hctLine->text().toDouble(&ok);
-    if(ok) hct = mw->validate_physiology("Haematocrit", hct);
+    if(ok) hct = IxTrak->validate_physiology("Haematocrit", hct);
 
     predTLco = ui->predtlcoLine->text().toDouble(&ok);
-    if(ok) predTLco = mw->validate_physiology("TLco", predTLco);
+    if(ok) predTLco = IxTrak->validate_physiology("TLco", predTLco);
 
     measTLco = ui->meastlcoLine->text().toDouble(&ok);
-    if(ok) measTLco = mw->validate_physiology("TLco", measTLco);
+    if(ok) measTLco = IxTrak->validate_physiology("TLco", measTLco);
 
     if((predTLco > 0) && (measTLco > 0)) {
         if(hb > 0) {

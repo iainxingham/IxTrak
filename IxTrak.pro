@@ -32,6 +32,7 @@ SOURCES += \
         mainwindow.cpp \
         physiology.cpp \
         preclinic.cpp \
+        singleton.cpp \
         tlcocalc.cpp
 
 HEADERS += \
@@ -41,6 +42,7 @@ HEADERS += \
         mainwindow.h \
         physiology.h \
         preclinic.h \
+        singleton.h \
         tlcocalc.h
 
 FORMS += \

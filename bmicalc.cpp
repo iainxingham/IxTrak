@@ -1,7 +1,8 @@
 #include "bmicalc.h"
 #include "ui_bmicalc.h"
 
-#include "mainwindow.h"
+//#include "mainwindow.h"
+#include "singleton.h"
 
 #include <QMessageBox>
 #include <QString>
@@ -23,15 +24,15 @@ void BMICalc::on_calcButton_clicked()
     bool okh, okw;
     double height, weight, bmi;
     QString str;
-    MainWindow *mw;
+    //MainWindow *mw;
 
-    mw = qobject_cast<MainWindow*> (this->parent());
+    //mw = qobject_cast<MainWindow*> (this->parent());
 
     height = ui->htLine->text().toDouble(&okh);
     weight = ui->wtLine->text().toDouble(&okw);
 
-    if(okh) height = mw->validate_physiology("Height", height);
-    if(okw) weight = mw->validate_physiology("Weight", weight);
+    if(okh) height = IxTrak->validate_physiology("Height", height);
+    if(okw) weight = IxTrak->validate_physiology("Weight", weight);
 
     if((!okh) || (height < 0)) {
         QMessageBox::about(this, "Error", "Please check height value");

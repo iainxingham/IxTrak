@@ -4,7 +4,7 @@
 #include "physiology.h"
 
 #include <QMainWindow>
-#include <QSqlDatabase>
+//#include <QSqlDatabase>
 
 #define CONFIG_FILE_NAME    "ixtrak.cfg"
 
@@ -17,18 +17,18 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
-    physiology limits;
-    QString db_path;
-    QSqlDatabase db;
+    //physiology limits;
+    //QString db_path;
+    //QSqlDatabase db;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    double validate_physiology(QString s, double val);
-    void db_insert_physiology(QString rxr, QString type, double val, double high=0, double low=0);
-    bool valid_rxr(QString rxr);
-    void db_insert_preclinic(QString rxr, QString nhs, QString test);
+    //double validate_physiology(QString s, double val);
+    //void db_insert_physiology(QString rxr, QString type, double val, double high=0, double low=0);
+    //bool valid_rxr(QString rxr);
+    //void db_insert_preclinic(QString rxr, QString nhs, QString test);
 
 private slots:
     void on_actionAbout_triggered();
@@ -52,12 +52,12 @@ private:
     void closeEvent(QCloseEvent *event);
 
     bool load_config();
-    bool init_db_connection();
+    //bool init_db_connection();
 
-    int db_get_rxr(QString rxr);
-    void db_insert_rxr(QString rxr, QString nhs="NULL");
-    int db_lookup_or_add(QString table, QString val);
-    bool db_isOK();
+    //int db_get_rxr(QString rxr);
+    //void db_insert_rxr(QString rxr, QString nhs="NULL");
+    //int db_lookup_or_add(QString table, QString val);
+    //bool db_isOK();
 };
 
 #endif // MAINWINDOW_H

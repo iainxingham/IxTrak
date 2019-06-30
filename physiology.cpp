@@ -28,7 +28,7 @@ double physiology::validate(QString s, double val)
         return val;
     }
 
-/*    if(s == "FeNO") {
+   /*if(s == "FeNO") {
         QString m = "FeNo, min %1, max %2";
         m = m.arg(QString::number(limits[s].min), QString::number(limits[s].max));
         QMessageBox msg;

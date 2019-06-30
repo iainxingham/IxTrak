@@ -1,7 +1,8 @@
 #include "preclinic.h"
 #include "ui_preclinic.h"
 
-#include "mainwindow.h"
+//#include "mainwindow.h"
+#include "singleton.h"
 
 #include <QMessageBox>
 
@@ -36,13 +37,13 @@ void preclinic::on_pushButton_clicked()
 
 void preclinic::insert_ix()
 {
-    MainWindow *mw;
+    //MainWindow *mw;
     QMessageBox msg;
     QString str, nhs_num;
 
-    mw = qobject_cast<MainWindow*> (this->parent());
+    //mw = qobject_cast<MainWindow*> (this->parent());
 
-    if(!mw->valid_rxr(ui->rxrEdit->text())) {
+    if(!valid_rxr(ui->rxrEdit->text())) {
         msg.setWindowTitle("Warning");
         str = "Invalid RXR: \"%1\"";
         str = str.arg(ui->rxrEdit->text());
@@ -58,11 +59,11 @@ void preclinic::insert_ix()
     // Will be separate interactions if multiple Ix requested
     // Deal with by refactoring to take db out of mainwindow.cpp?
     if(ui->oxiCheck->isChecked())
-        mw->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "Overnight oximetry");
+        IxTrak->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "Overnight oximetry");
     if(ui->domiCheck->isChecked())
-        mw->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "Limited polysomnography");
+        IxTrak->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "Limited polysomnography");
     if(ui->oasysCheck->isChecked())
-        mw->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "Oasys diary");
+        IxTrak->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "Oasys diary");
     if(ui->ctCheck->isChecked())
-        mw->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "CT thorax");
+        IxTrak->db_insert_preclinic(ui->rxrEdit->text(), nhs_num, "CT thorax");
 }
