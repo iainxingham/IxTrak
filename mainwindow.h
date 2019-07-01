@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include "physiology.h"
+#include "ixtrak_options.h"
 
 #include <QMainWindow>
+#include <QTextStream>
 
 #define CONFIG_FILE_NAME    "ixtrak.cfg"
 
@@ -39,12 +41,15 @@ private slots:
 
     void on_actionPre_clinic_Ix_triggered();
 
+    void on_actionNew_interaction_triggered();
+
 private:
     Ui::MainWindow *ui;
     void closeEvent(QCloseEvent *event);
 
     bool load_config();
     void set_entry_logs();
+    void read_options(QTextStream &in, Options opt);
 
 };
 

@@ -31,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>849</width>
-     <height>27</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -62,6 +62,7 @@
     </property>
     <addaction name="actionPhysiology"/>
     <addaction name="actionPre_clinic_Ix"/>
+    <addaction name="actionNew_interaction"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuInsert"/>
@@ -115,6 +116,11 @@
   <action name="actionPre_clinic_Ix">
    <property name="text">
     <string>Pre clinic Ix</string>
+   </property>
+  </action>
+  <action name="actionNew_interaction">
+   <property name="text">
+    <string>New interaction</string>
    </property>
   </action>
  </widget>

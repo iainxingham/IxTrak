@@ -1,4 +1,5 @@
 #include "singleton.h"
+#include "ixtrak_options.h"
 
 #include <QMessageBox>
 #include <QSqlQuery>
@@ -17,6 +18,25 @@ bool valid_rxr(QString rxr)
     if(rxr.length() != 10) return false;
 
     return true;
+}
+
+// Prototype in ixtrak_options.h
+QString optionToString(Options o)
+{
+    switch(o) {
+    case Options::Contact:
+        return "Contact";
+    case Options::Disposal:
+        return "Disposal";
+    case Options::Referral:
+        return "Referral";
+    case Options::Diagnosis:
+        return "Diagnosis";
+    case Options::Investigation:
+        return "Investigation";
+    };
+
+    return "Error";
 }
 
 // Singleton class
@@ -274,4 +294,38 @@ QString Singleton::get_logs()
     }
 
     return ret;
+}
+
+void Singleton::set_data_option(Options opt, QString db, QString label)
+{
+    ShortOption so;
+
+    so.opt = opt;
+    so.dbName = db;
+    so.label = label;
+    dataOptions.append(so);
+}
+
+void Singleton::get_options(Options opt, QList<IxTrakOption> &list)
+{
+    IxTrakOption ito;
+
+    for (int i=0; i < dataOptions.size(); i++) {
+        if(dataOptions.at(i).opt == opt) {
+            ito.dbName = dataOptions.at(i).dbName;
+            ito.label = dataOptions.at(i).label;
+            ito.check = nullptr;
+            ito.radio = nullptr;
+
+            if(opt == Options::Contact)
+                ito.dbNum = db_lookup_or_add("contact_types", ito.dbName);
+            else if(opt == Options::Investigation)
+                ito.dbNum = db_lookup_or_add("inv_types", ito.dbName);
+            else if(opt == Options::Disposal)
+                ito.dbNum = db_lookup_or_add("disp_types", ito.dbName);
+            else ito.dbNum = 0;
+
+            list.append(ito);
+        }
+    }
 }

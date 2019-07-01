@@ -2,6 +2,7 @@
 #define SINGLETON_H
 
 #include "physiology.h"
+#include "ixtrak_options.h"
 
 #include <QString>
 #include <QSqlDatabase>
@@ -23,6 +24,9 @@ public:
     void log_db_entry(QString s);
     QString get_logs();
 
+    void set_data_option(Options opt, QString db, QString label);
+    void get_options(Options opt, QList<IxTrakOption> &list);
+
     bool db_init_connection();
     void db_insert_preclinic(QString rxr, QString nhs, QString test);
     int db_lookup_or_add(QString table, QString val);
@@ -36,6 +40,7 @@ private:
     QString db_path = "ixtrak.sqlite";
     QSqlDatabase db;
     QList<QString> entered;
+    QList<ShortOption> dataOptions;
 
     int db_get_rxr(QString rxr);
     void db_insert_rxr(QString rxr, QString nhs="NULL");

@@ -85,7 +85,8 @@ CREATE TABLE contact_types (id INTEGER PRIMARY KEY,
                             
 CREATE TABLE disp_types (id INTEGER PRIMARY KEY,
                          name TEXT);
-                                               
+
+                                       
 					  
                            
 INSERT INTO "phys_types"("measure", "ref_high", "ref_low") VALUES ("FeNO", "25", "5");
@@ -137,4 +138,5 @@ INSERT INTO "disp_types"("name") VALUES ("DNA - further appointment");
 INSERT INTO "disp_types"("name") VALUES ("RAU appointment");
 INSERT INTO "disp_types"("name") VALUES ("Other / pending");
 INSERT INTO "disp_types"("name") VALUES ("Write with results");
+
 

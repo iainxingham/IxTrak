@@ -33,7 +33,8 @@ SOURCES += \
         physiology.cpp \
         preclinic.cpp \
         singleton.cpp \
-        tlcocalc.cpp
+        tlcocalc.cpp \
+    data_entry.cpp
 
 HEADERS += \
         bmicalc.h \
@@ -43,7 +44,9 @@ HEADERS += \
         physiology.h \
         preclinic.h \
         singleton.h \
-        tlcocalc.h
+        tlcocalc.h \
+    data_entry.h \
+    ixtrak_options.h
 
 FORMS += \
         bmicalc.ui \
@@ -51,7 +54,8 @@ FORMS += \
         insertphys.ui \
         mainwindow.ui \
         preclinic.ui \
-        tlcocalc.ui
+        tlcocalc.ui \
+    data_entry.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

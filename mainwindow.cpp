@@ -7,6 +7,8 @@
 #include "convert.h"
 #include "preclinic.h"
 #include "singleton.h"
+#include "data_entry.h"
+#include "ixtrak_options.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -116,7 +118,6 @@ bool MainWindow::load_config()
                 strlist = line.split(",");
                 if(strlist.size() >= 3) {       // >= 3 to allow for trailing comments
                     IxTrak->set_physiology_limit(strlist[0].trimmed(), strlist[1].toDouble(), strlist[2].toDouble());
-                    //qDebug() << "Physiology: " << strlist[0].trimmed() << " min: " << strlist[1].toDouble() << " max: " << strlist[2].toDouble();
                 }
                 line = in.readLine();
             }
@@ -132,6 +133,28 @@ bool MainWindow::load_config()
             continue;
         }
 
+        // Load data entry options
+        if(line.startsWith("Contact options:")) {
+            read_options(in, Options::Contact);
+            continue;   // This means a blank line is needed following the end of each option block
+        }
+        if(line.startsWith("Diagnosis options:")) {
+            read_options(in, Options::Diagnosis);
+            continue;   // This means a blank line is needed following the end of each option block
+        }
+        if(line.startsWith("Investigation options:")) {
+            read_options(in, Options::Investigation);
+            continue;   // This means a blank line is needed following the end of each option block
+        }
+        if(line.startsWith("Referral options:")) {
+            read_options(in, Options::Referral);
+            continue;   // This means a blank line is needed following the end of each option block
+        }
+        if(line.startsWith("Disposal options:")) {
+            read_options(in, Options::Disposal);
+            continue;   // This means a blank line is needed following the end of each option block
+        }
+
         // Other configs here as else ifs
     }
 
@@ -141,6 +164,29 @@ bool MainWindow::load_config()
 void MainWindow::set_entry_logs()
 {
     ui->dbEntryLog->setPlainText(IxTrak->get_logs());
+}
+
+void MainWindow::read_options(QTextStream &in, Options opt)
+{
+    QString line;
+    QStringList strlist;
+
+    line = in.readLine();
+    while (line.startsWith(" ") || line.startsWith("\t")) {
+        if(line.trimmed().startsWith("#")) {
+            line = in.readLine();
+            continue;
+        }
+
+        strlist = line.split(",");
+        if(strlist.size() >= 2) {       // >= 2 to allow for trailing comments
+            IxTrak->set_data_option(opt, strlist[0].trimmed(), strlist[1].trimmed());
+            /*qDebug() << "Option: " << optionToString(opt) << " DB name: "
+                     << strlist[0].trimmed() << " Label: " << strlist[1].trimmed();*/
+        }
+
+        line = in.readLine();
+    }
 }
 
 void MainWindow::on_actionPhysiology_triggered()
@@ -173,3 +219,12 @@ void MainWindow::on_actionPre_clinic_Ix_triggered()
     set_entry_logs();
 }
 
+void MainWindow::on_actionNew_interaction_triggered()
+{
+    data_entry *de;
+
+    de = new data_entry(this);
+    de->exec();
+    delete de;
+    set_entry_logs();
+}
