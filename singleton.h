@@ -33,6 +33,11 @@ public:
     void db_insert_physiology(QString rxr, QString type, double val, double high=0.0, double low=0.0);
     QPair<QPair<int, int>, QString> db_insert_preclinic_interaction(QString rxr, QString nhs);
     void db_insert_preclinic_ix(QPair<QPair<int, int>, QString> details, QString test);
+    // To implement
+    int db_insert_interaction(QString date, int patid, int inttype, int disp, bool for_radiology, bool admit, int seenby, QString diagnosis, int follow_up, QString notes);
+    void db_insert_investigation(int patid, int interactid, int invid, QString date, QString notes="NULL");
+    void db_insert_referral(int patid, int interactid, QString speciality, QString date);
+    int db_get_or_add_rxr(QString rxr, QString nhs="NULL");
 
 
 private:

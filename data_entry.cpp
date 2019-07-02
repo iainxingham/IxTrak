@@ -4,6 +4,7 @@
 #include "singleton.h"
 
 #include <QMessageBox>
+#include <QDateTime>
 
 data_entry::data_entry(QWidget *parent) :
     QDialog(parent),
@@ -79,6 +80,69 @@ void data_entry::clear_input_form()
     ui->diagEdit->clear();
     ui->ixEdit->clear();
     ui->refEdit->clear();
+}
+
+void data_entry::save_entered_data()
+{
+    int rxr_id, interact_type, disposal_type, seen_by, interact_num;
+    QMessageBox msg;
+    QString str, nhs_num, dt;
+    QString diagnosis_str = "";
+    QList<IxTrakOption>::iterator i;
+
+    if(!valid_rxr(ui->rxrEdit->text())) {
+        msg.setWindowTitle("Warning");
+        str = "Invalid RXR: \"%1\"";
+        str = str.arg(ui->rxrEdit->text());
+        msg.setText(str);
+        msg.setIcon(QMessageBox::Warning);
+        msg.exec();
+        return;
+    }
+
+    nhs_num = ui->nhsEdit->text();
+    if(nhs_num == "") nhs_num = "NULL";
+
+    rxr_id = IxTrak->db_get_or_add_rxr(ui->rxrEdit->text(), nhs_num);
+    dt = QDateTime::currentDateTime().toString("dd:MM:yyyy hh:mm t");
+    interact_type = get_dbentry_from_list(contacts);
+    disposal_type = get_dbentry_from_list(disposals);
+
+    for(i = diagnoses.begin(); i != diagnoses.end(); ++i) {
+        if(i->check->isChecked()) diagnosis_str += (i->dbName + ", ");
+    }
+
+    seen_by = 1; // Todo - combi box
+
+    interact_num = IxTrak->db_insert_interaction(dt,
+                                                 rxr_id,
+                                                 interact_type,
+                                                 disposal_type,
+                                                 ui->radiologyCheckBox->isChecked(),
+                                                 ui->admitCheckBox->isChecked(),
+                                                 seen_by,
+                                                 diagnosis_str,
+                                                 ui->followupEdit->text().toInt(),
+                                                 ui->notesEdit->toPlainText());
+
+    for(i = investigations.begin(); i != investigations.end(); i++) {
+        if(i->check->isChecked()) IxTrak->db_insert_investigation(rxr_id, interact_num, i->dbNum, dt);
+    }
+
+    for(i = referrals.begin(); i != referrals.end(); i++) {
+        if(i->check->isChecked()) IxTrak->db_insert_referral(rxr_id, interact_num, i->dbName, dt);
+    }
+}
+
+int data_entry::get_dbentry_from_list(QList<IxTrakOption> &list)
+{
+    QList<IxTrakOption>::iterator i;
+
+    for (i = list.begin(); i != list.end(); ++i) {
+        if(i->radio->isChecked()) return i->dbNum;
+    }
+
+    return -1;
 }
 
 void data_entry::on_pushButton_clicked()

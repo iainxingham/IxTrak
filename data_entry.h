@@ -36,6 +36,7 @@ private:
     void set_option_pointers(QList<IxTrakOption> &list, bool radio, QGroupBox *box);
     void clear_input_form();
     void save_entered_data();
+    int get_dbentry_from_list(QList<IxTrakOption> &list);
 
 };
 

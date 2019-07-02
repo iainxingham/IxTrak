@@ -280,6 +280,19 @@ void Singleton::db_insert_preclinic_ix(QPair<QPair<int, int>, QString> details, 
     query.exec();
 }
 
+int Singleton::db_get_or_add_rxr(QString rxr, QString nhs)
+{
+    int rxr_id;
+
+    rxr_id = db_get_rxr(rxr);
+    if(rxr_id == -1) {
+        db_insert_rxr(rxr, nhs);
+        rxr_id = db_get_rxr(rxr);
+    }
+
+    return rxr_id;
+}
+
 void Singleton::log_db_entry(QString s)
 {
     entered.append(s);

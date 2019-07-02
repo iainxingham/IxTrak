@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>999</width>
-    <height>614</height>
+    <width>1141</width>
+    <height>755</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>550</y>
+     <x>840</x>
+     <y>670</y>
      <width>171</width>
      <height>32</height>
     </rect>
@@ -32,10 +32,10 @@
   <widget class="QPushButton" name="saveaddButton">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>500</y>
-     <width>171</width>
-     <height>41</height>
+     <x>820</x>
+     <y>590</y>
+     <width>211</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -46,8 +46,8 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>100</y>
-     <width>171</width>
+     <y>170</y>
+     <width>201</width>
      <height>251</height>
     </rect>
    </property>
@@ -58,10 +58,10 @@
   <widget class="QGroupBox" name="diagnosisBox">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>10</y>
-     <width>120</width>
-     <height>291</height>
+     <x>270</x>
+     <y>40</y>
+     <width>211</width>
+     <height>351</height>
     </rect>
    </property>
    <property name="title">
@@ -71,10 +71,10 @@
   <widget class="QGroupBox" name="investigationBox">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>10</y>
-     <width>151</width>
-     <height>281</height>
+     <x>500</x>
+     <y>30</y>
+     <width>201</width>
+     <height>361</height>
     </rect>
    </property>
    <property name="title">
@@ -84,10 +84,10 @@
   <widget class="QGroupBox" name="referralBox">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>10</y>
+     <x>720</x>
+     <y>30</y>
      <width>191</width>
-     <height>301</height>
+     <height>361</height>
     </rect>
    </property>
    <property name="title">
@@ -97,10 +97,10 @@
   <widget class="QGroupBox" name="disposalBox">
    <property name="geometry">
     <rect>
-     <x>810</x>
-     <y>10</y>
+     <x>930</x>
+     <y>30</y>
      <width>171</width>
-     <height>151</height>
+     <height>191</height>
     </rect>
    </property>
    <property name="title">
@@ -110,9 +110,9 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>270</y>
-     <width>101</width>
+     <x>950</x>
+     <y>300</y>
+     <width>111</width>
      <height>17</height>
     </rect>
    </property>
@@ -123,8 +123,8 @@
   <widget class="QLineEdit" name="followupEdit">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>290</y>
+     <x>950</x>
+     <y>320</y>
      <width>113</width>
      <height>25</height>
     </rect>
@@ -133,8 +133,8 @@
   <widget class="QCheckBox" name="admitCheckBox">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>210</y>
+     <x>940</x>
+     <y>230</y>
      <width>141</width>
      <height>23</height>
     </rect>
@@ -146,8 +146,8 @@
   <widget class="QCheckBox" name="radiologyCheckBox">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>230</y>
+     <x>940</x>
+     <y>260</y>
      <width>181</width>
      <height>23</height>
     </rect>
@@ -159,8 +159,8 @@
   <widget class="QCheckBox" name="seenbyCheckBox">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>420</y>
+     <x>650</x>
+     <y>460</y>
      <width>121</width>
      <height>23</height>
     </rect>
@@ -172,9 +172,9 @@
   <widget class="QComboBox" name="seenbyCombo">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>450</y>
-     <width>111</width>
+     <x>650</x>
+     <y>490</y>
+     <width>141</width>
      <height>25</height>
     </rect>
    </property>
@@ -182,9 +182,9 @@
   <widget class="QTextBrowser" name="enteredLog">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>510</y>
-     <width>411</width>
+     <x>10</x>
+     <y>640</y>
+     <width>481</width>
      <height>81</height>
     </rect>
    </property>
@@ -192,9 +192,9 @@
   <widget class="QTextEdit" name="notesEdit">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>410</y>
-     <width>171</width>
+     <x>40</x>
+     <y>460</y>
+     <width>201</width>
      <height>70</height>
     </rect>
    </property>
@@ -202,9 +202,9 @@
   <widget class="QPlainTextEdit" name="diagEdit">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>300</y>
-     <width>121</width>
+     <x>270</x>
+     <y>390</y>
+     <width>211</width>
      <height>41</height>
     </rect>
    </property>
@@ -212,9 +212,9 @@
   <widget class="QPlainTextEdit" name="ixEdit">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>290</y>
-     <width>151</width>
+     <x>500</x>
+     <y>390</y>
+     <width>201</width>
      <height>41</height>
     </rect>
    </property>
@@ -222,8 +222,8 @@
   <widget class="QPlainTextEdit" name="refEdit">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>310</y>
+     <x>720</x>
+     <y>390</y>
      <width>191</width>
      <height>41</height>
     </rect>
@@ -232,8 +232,8 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>380</y>
+     <x>40</x>
+     <y>430</y>
      <width>67</width>
      <height>17</height>
     </rect>
@@ -246,22 +246,12 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>20</y>
-     <width>180</width>
-     <height>58</height>
+     <y>50</y>
+     <width>201</width>
+     <height>96</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>RXR</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="rxrEdit"/>
-    </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
@@ -269,8 +259,18 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>RXR</string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="1">
      <widget class="QLineEdit" name="nhsEdit"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="rxrEdit"/>
     </item>
    </layout>
   </widget>
