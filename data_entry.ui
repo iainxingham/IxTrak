@@ -29,7 +29,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="saveaddButton">
    <property name="geometry">
     <rect>
      <x>750</x>
@@ -273,6 +273,19 @@
      <widget class="QLineEdit" name="nhsEdit"/>
     </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="clearButton">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>530</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear form</string>
+   </property>
   </widget>
  </widget>
  <resources/>

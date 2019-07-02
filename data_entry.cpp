@@ -3,6 +3,8 @@
 
 #include "singleton.h"
 
+#include <QMessageBox>
+
 data_entry::data_entry(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::data_entry)
@@ -53,4 +55,49 @@ void data_entry::set_option_pointers(QList<IxTrakOption> &list, bool radio, QGro
     // add stretch?
 
     box->setLayout(vbox);
+}
+
+void data_entry::clear_input_form()
+{
+    QList<IxTrakOption>::iterator i;
+
+    ui->rxrEdit->clear();
+    ui->nhsEdit->clear();
+
+    ui->seenbyCheckBox->setChecked(false);
+    ui->radiologyCheckBox->setChecked(false);
+    ui->admitCheckBox->setChecked(false);
+
+    for(i = contacts.begin(); i != contacts.end(); ++i) i->radio->setChecked(false);
+    for(i = disposals.begin(); i != disposals.end(); ++i) i->radio->setChecked(false);
+    for(i = diagnoses.begin(); i != diagnoses.end(); ++i) i->check->setChecked(false);
+    for(i = referrals.begin(); i != referrals.end(); ++i) i->check->setChecked(false);
+    for(i = investigations.begin(); i != investigations.end(); ++i) i->check->setChecked(false);
+
+    ui->followupEdit->clear();
+    ui->notesEdit->clear();
+    ui->diagEdit->clear();
+    ui->ixEdit->clear();
+    ui->refEdit->clear();
+}
+
+void data_entry::on_pushButton_clicked()
+{
+    if(!valid_rxr(ui->rxrEdit->text())) {
+        QMessageBox msg;
+        msg.setWindowTitle("Warning");
+        msg.setText("RXR not valid. No data will be saved.");
+        msg.setIcon(QMessageBox::Warning);
+        msg.exec();
+
+        return;
+    }
+
+    save_entered_data();
+    clear_input_form();
+}
+
+void data_entry::on_clearButton_clicked()
+{
+    clear_input_form();
 }

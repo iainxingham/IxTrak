@@ -18,6 +18,11 @@ public:
     explicit data_entry(QWidget *parent = nullptr);
     ~data_entry();
 
+private slots:
+    void on_pushButton_clicked();
+
+    void on_clearButton_clicked();
+
 private:
     Ui::data_entry *ui;
 
@@ -29,6 +34,8 @@ private:
 
     void update_entry_log();
     void set_option_pointers(QList<IxTrakOption> &list, bool radio, QGroupBox *box);
+    void clear_input_form();
+    void save_entered_data();
 
 };
 
