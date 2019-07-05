@@ -280,6 +280,61 @@ void Singleton::db_insert_preclinic_ix(QPair<QPair<int, int>, QString> details, 
     query.exec();
 }
 
+int Singleton::db_insert_interaction(QString date, int patid, int inttype, int disp, bool for_radiology,
+                                     bool admit, int seenby, QString diagnosis, int follow_up, QString notes)
+{
+    QSqlQuery query;
+
+    query.prepare("INSERT INTO interaction (interact_date, pat_id, interact_type, disposal, for_radiology, "
+                                           "admit, seen_by, diagnosis, follow_up, notes) "
+                  "VALUES (:interact_date, :pat_id, :interact_type, :disposal, :for_radiology, "
+                          ":admit, :seen_by, :diagnosis, :follow_up, :notes)");
+    query.bindValue(":interact_date", date);
+    query.bindValue(":pat_id", patid);
+    query.bindValue(":interact_type", inttype);
+    query.bindValue(":disposal", disp);
+    query.bindValue(":for_radiology", for_radiology ? 1 : 0);
+    query.bindValue(":admit", admit ? 1: 0);
+    query.bindValue("seen_by", seenby);
+    query.bindValue(":diagnosis", diagnosis);
+    query.bindValue(":follow_up", follow_up);
+    query.bindValue(":notes", notes);
+    query.exec();
+
+    query.exec("SELECT id FROM interaction WHERE ROWID = (SELECT last_insert_rowid())");
+    query.first();
+    return (query.value(0).toInt());
+}
+
+void Singleton::db_insert_investigation(int patid, int interactid, int invid, QString date, QString notes)
+{
+    QSqlQuery query;
+
+    query.prepare("INSERT INTO investigation (pat_id, interact_id, inv_type, request_date, notes) "
+                  "VALUES (:pat_id, :interact_id, :inv_type, :request_date, :notes)");
+    query.bindValue(":pat_id", patid);
+    query.bindValue(":interact_id", interactid);
+    query.bindValue(":inv_type", invid);
+    query.bindValue(":request_date", date);
+    query.bindValue(":notes", notes);
+
+    query.exec();
+}
+
+void Singleton::db_insert_referral(int patid, int interactid, QString speciality, QString date)
+{
+    QSqlQuery query;
+
+    query.prepare("INSERT INTO referral (pat_id, interact_id, request_date, speciality) "
+                  "VALUES (:pat_id, :interact_id, :request_date, :speciality)");
+    query.bindValue(":pat_id", patid);
+    query.bindValue(":interact_id", interactid);
+    query.bindValue(":request_date", date);
+    query.bindValue(":speciality", speciality);
+
+    query.exec();
+}
+
 int Singleton::db_get_or_add_rxr(QString rxr, QString nhs)
 {
     int rxr_id;
@@ -291,6 +346,40 @@ int Singleton::db_get_or_add_rxr(QString rxr, QString nhs)
     }
 
     return rxr_id;
+}
+
+int Singleton::db_get_clinician_id(QString name)
+{
+    QSqlQuery query;
+
+    query.prepare("SELECT id FROM clinician WHERE name = :name");
+    query.bindValue(":name", name);
+    query.exec();
+    query.first();
+    return query.value(0).toInt();
+}
+
+void Singleton::db_get_active_clinicians()
+{
+    QSqlQuery query;
+    Clinician c;
+
+    query.exec("SELECT (id, name, grade) FROM clinician WHERE active > 0");
+    while(query.next()) {
+        c.id = query.value(0).toInt();
+        c.name = query.value(1).toString();
+        c.grade = query.value(2).toInt();
+        clinicians.append(c);
+    }
+
+    load_primary_clinician();
+}
+
+void Singleton::populate_clinician_box(QComboBox *box)
+{
+    QList<Clinician>::iterator i;
+
+    for(i = clinicians.begin(); i < clinicians.end(); i++) box->addItem(i->name);
 }
 
 void Singleton::log_db_entry(QString s)
@@ -341,4 +430,21 @@ void Singleton::get_options(Options opt, QList<IxTrakOption> &list)
             list.append(ito);
         }
     }
+}
+
+void Singleton::set_primary_clinician(QString s)
+{
+    temp_s = s;
+}
+
+void Singleton::load_primary_clinician()
+{
+    primary_clinican.name = temp_s;
+    primary_clinican.grade = db_lookup_or_add("clin_grades", "Consultant");
+    primary_clinican.id = db_get_clinician_id(temp_s);
+}
+
+int Singleton::get_primary_clinician_id()
+{
+    return primary_clinican.id;
 }

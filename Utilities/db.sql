@@ -55,7 +55,8 @@ CREATE TABLE interaction (id INTEGER PRIMARY KEY,
 						  
 CREATE TABLE clinician (id INTEGER PRIMARY KEY,
                         name TEXT,
-                        grade INTEGER);
+                        grade INTEGER,
+			active INTEGER);
                         
 CREATE TABLE investigation (pat_id INTEGER,
                             interact_id INTEGER,

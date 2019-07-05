@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     IxTrak = new Singleton();
     load_config();
     IxTrak->db_init_connection();
+    IxTrak->db_get_active_clinicians();
 }
 
 MainWindow::~MainWindow()
@@ -153,6 +154,11 @@ bool MainWindow::load_config()
         if(line.startsWith("Disposal options:")) {
             read_options(in, Options::Disposal);
             continue;   // This means a blank line is needed following the end of each option block
+        }
+
+        if(line.startsWith("Primary clinician:")) {
+            line = in.readLine();
+            IxTrak->set_primary_clinician(line.trimmed());
         }
 
         // Other configs here as else ifs

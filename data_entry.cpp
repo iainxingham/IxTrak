@@ -23,6 +23,8 @@ data_entry::data_entry(QWidget *parent) :
     set_option_pointers(diagnoses, false, ui->diagnosisBox);
     set_option_pointers(referrals, false, ui->referralBox);
     set_option_pointers(investigations, false, ui->investigationBox);
+
+    IxTrak->populate_clinician_box(ui->seenbyCombo);
 }
 
 data_entry::~data_entry()
@@ -85,6 +87,7 @@ void data_entry::clear_input_form()
 void data_entry::save_entered_data()
 {
     int rxr_id, interact_type, disposal_type, seen_by, interact_num;
+    int ref_count = 0, ix_count = 0;
     QMessageBox msg;
     QString str, nhs_num, dt;
     QString diagnosis_str = "";
@@ -112,7 +115,8 @@ void data_entry::save_entered_data()
         if(i->check->isChecked()) diagnosis_str += (i->dbName + ", ");
     }
 
-    seen_by = 1; // Todo - combi box
+    seen_by = ui->seenbyCheckBox->isChecked() ? IxTrak->db_get_clinician_id(ui->seenbyCombo->currentText()):
+                                                IxTrak->get_primary_clinician_id();
 
     interact_num = IxTrak->db_insert_interaction(dt,
                                                  rxr_id,
@@ -126,12 +130,18 @@ void data_entry::save_entered_data()
                                                  ui->notesEdit->toPlainText());
 
     for(i = investigations.begin(); i != investigations.end(); i++) {
+        ++ix_count;
         if(i->check->isChecked()) IxTrak->db_insert_investigation(rxr_id, interact_num, i->dbNum, dt);
     }
 
     for(i = referrals.begin(); i != referrals.end(); i++) {
+        ++ref_count;
         if(i->check->isChecked()) IxTrak->db_insert_referral(rxr_id, interact_num, i->dbName, dt);
     }
+
+    str = ui->rxrEdit->text() + " - " + get_name_from_list(contacts) + ": %1 investigations, %2 referrals";
+    str = str.arg(ix_count, ref_count);
+    IxTrak->log_db_entry(str);
 }
 
 int data_entry::get_dbentry_from_list(QList<IxTrakOption> &list)
@@ -143,6 +153,17 @@ int data_entry::get_dbentry_from_list(QList<IxTrakOption> &list)
     }
 
     return -1;
+}
+
+QString data_entry::get_name_from_list(QList<IxTrakOption> &list)
+{
+    QList<IxTrakOption>::iterator i;
+
+    for (i = list.begin(); i != list.end(); ++i) {
+        if(i->radio->isChecked()) return i->dbName;
+    }
+
+    return "Error";
 }
 
 void data_entry::on_pushButton_clicked()

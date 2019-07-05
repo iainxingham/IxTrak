@@ -27,6 +27,12 @@ struct ShortOption {
     Options opt;
 };
 
+struct Clinician {
+    QString name;
+    int grade;
+    int id;
+};
+
 QString optionToString(Options o);
 
 #endif // IXTRAK_OPTIONS_H

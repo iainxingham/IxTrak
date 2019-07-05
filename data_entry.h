@@ -37,6 +37,7 @@ private:
     void clear_input_form();
     void save_entered_data();
     int get_dbentry_from_list(QList<IxTrakOption> &list);
+    QString get_name_from_list(QList<IxTrakOption> &list);
 
 };
 
