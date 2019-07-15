@@ -11,6 +11,8 @@ struct IxTrakOption {
     QString label;
     QRadioButton *radio;
     QCheckBox *check;
+
+    //IxTrakOption (const IxTrakOption &) = default;
 };
 
 enum class Options {
@@ -25,12 +27,16 @@ struct ShortOption {
     QString dbName;
     QString label;
     Options opt;
+
+    //ShortOption (const ShortOption &) = default;
 };
 
 struct Clinician {
     QString name;
     int grade;
     int id;
+
+    //Clinician (const Clinician &) = default;
 };
 
 QString optionToString(Options o);

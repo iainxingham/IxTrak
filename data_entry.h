@@ -19,9 +19,9 @@ public:
     ~data_entry();
 
 private slots:
-    void on_pushButton_clicked();
-
     void on_clearButton_clicked();
+
+    void on_saveaddButton_clicked();
 
 private:
     Ui::data_entry *ui;

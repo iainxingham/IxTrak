@@ -294,8 +294,8 @@ int Singleton::db_insert_interaction(QString date, int patid, int inttype, int d
     query.bindValue(":interact_type", inttype);
     query.bindValue(":disposal", disp);
     query.bindValue(":for_radiology", for_radiology ? 1 : 0);
-    query.bindValue(":admit", admit ? 1: 0);
-    query.bindValue("seen_by", seenby);
+    query.bindValue(":admit", admit ? 1 : 0);
+    query.bindValue(":seen_by", seenby);
     query.bindValue(":diagnosis", diagnosis);
     query.bindValue(":follow_up", follow_up);
     query.bindValue(":notes", notes);
@@ -364,12 +364,14 @@ void Singleton::db_get_active_clinicians()
     QSqlQuery query;
     Clinician c;
 
-    query.exec("SELECT (id, name, grade) FROM clinician WHERE active > 0");
+//    qDebug() << "In db_get_active_clinicians()";
+    query.exec("SELECT id, name, grade FROM clinician WHERE active > 0");
     while(query.next()) {
         c.id = query.value(0).toInt();
         c.name = query.value(1).toString();
         c.grade = query.value(2).toInt();
         clinicians.append(c);
+        //qDebug() << "db_get_active_clinician() Added: " << c.id << " " << c.name << " " << c.grade;
     }
 
     load_primary_clinician();
@@ -435,6 +437,7 @@ void Singleton::get_options(Options opt, QList<IxTrakOption> &list)
 void Singleton::set_primary_clinician(QString s)
 {
     temp_s = s;
+    //qDebug() << "set_primary_clinician() Primary clinician: " << temp_s;
 }
 
 void Singleton::load_primary_clinician()
@@ -442,6 +445,7 @@ void Singleton::load_primary_clinician()
     primary_clinican.name = temp_s;
     primary_clinican.grade = db_lookup_or_add("clin_grades", "Consultant");
     primary_clinican.id = db_get_clinician_id(temp_s);
+    //qDebug() << "load_primary_clinician() Primary clinician: " << primary_clinican.name << " grade: " << primary_clinican.grade << " id: " << primary_clinican.id;
 }
 
 int Singleton::get_primary_clinician_id()

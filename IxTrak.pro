@@ -24,6 +24,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
+QMAKE_CXXFLAGS += -Wno-deprecated-copy
+
 SOURCES += \
         bmicalc.cpp \
         convert.cpp \

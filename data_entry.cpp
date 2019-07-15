@@ -5,6 +5,7 @@
 
 #include <QMessageBox>
 #include <QDateTime>
+#include <QDebug>
 
 data_entry::data_entry(QWidget *parent) :
     QDialog(parent),
@@ -71,8 +72,20 @@ void data_entry::clear_input_form()
     ui->radiologyCheckBox->setChecked(false);
     ui->admitCheckBox->setChecked(false);
 
-    for(i = contacts.begin(); i != contacts.end(); ++i) i->radio->setChecked(false);
-    for(i = disposals.begin(); i != disposals.end(); ++i) i->radio->setChecked(false);
+    for(i = contacts.begin(); i != contacts.end(); ++i) {
+        if(i->radio->isChecked()) {
+            i->radio->setAutoExclusive(false);
+            i->radio->setChecked(false);
+            i->radio->setAutoExclusive(true);
+        }
+    }
+    for(i = disposals.begin(); i != disposals.end(); ++i) {
+        if(i->radio->isChecked()) {
+            i->radio->setAutoExclusive(false);
+            i->radio->setChecked(false);
+            i->radio->setAutoExclusive(true);
+        }
+    }
     for(i = diagnoses.begin(); i != diagnoses.end(); ++i) i->check->setChecked(false);
     for(i = referrals.begin(); i != referrals.end(); ++i) i->check->setChecked(false);
     for(i = investigations.begin(); i != investigations.end(); ++i) i->check->setChecked(false);
@@ -115,8 +128,12 @@ void data_entry::save_entered_data()
         if(i->check->isChecked()) diagnosis_str += (i->dbName + ", ");
     }
 
+    //qDebug() << "seen_by: " << ui->seenbyCheckBox->isChecked();
+
     seen_by = ui->seenbyCheckBox->isChecked() ? IxTrak->db_get_clinician_id(ui->seenbyCombo->currentText()):
                                                 IxTrak->get_primary_clinician_id();
+    //qDebug() << "seen_by: " << seen_by;
+
 
     interact_num = IxTrak->db_insert_interaction(dt,
                                                  rxr_id,
@@ -130,18 +147,26 @@ void data_entry::save_entered_data()
                                                  ui->notesEdit->toPlainText());
 
     for(i = investigations.begin(); i != investigations.end(); i++) {
-        ++ix_count;
-        if(i->check->isChecked()) IxTrak->db_insert_investigation(rxr_id, interact_num, i->dbNum, dt);
+        if(i->check->isChecked()) {
+            IxTrak->db_insert_investigation(rxr_id, interact_num, i->dbNum, dt);
+            ++ix_count;
+        }
     }
 
     for(i = referrals.begin(); i != referrals.end(); i++) {
-        ++ref_count;
-        if(i->check->isChecked()) IxTrak->db_insert_referral(rxr_id, interact_num, i->dbName, dt);
+        if(i->check->isChecked()) {
+            IxTrak->db_insert_referral(rxr_id, interact_num, i->dbName, dt);
+            ++ref_count;
+        }
     }
 
-    str = ui->rxrEdit->text() + " - " + get_name_from_list(contacts) + ": %1 investigations, %2 referrals";
-    str = str.arg(ix_count, ref_count);
+    str = ui->rxrEdit->text() + " - " + get_name_from_list(contacts) + ": %1 investigation(s), %2 referral(s)";
+    //qDebug() << str << "\nix_count: " << ix_count << "ref_count: " << ref_count;
+    str = str.arg(ix_count).arg(ref_count);
+
     IxTrak->log_db_entry(str);
+
+    update_entry_log();
 }
 
 int data_entry::get_dbentry_from_list(QList<IxTrakOption> &list)
@@ -166,7 +191,12 @@ QString data_entry::get_name_from_list(QList<IxTrakOption> &list)
     return "Error";
 }
 
-void data_entry::on_pushButton_clicked()
+void data_entry::on_clearButton_clicked()
+{
+    clear_input_form();
+}
+
+void data_entry::on_saveaddButton_clicked()
 {
     if(!valid_rxr(ui->rxrEdit->text())) {
         QMessageBox msg;
@@ -179,10 +209,5 @@ void data_entry::on_pushButton_clicked()
     }
 
     save_entered_data();
-    clear_input_form();
-}
-
-void data_entry::on_clearButton_clicked()
-{
     clear_input_form();
 }
