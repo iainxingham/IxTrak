@@ -35,6 +35,7 @@ SOURCES += \
         physiology.cpp \
         preclinic.cpp \
         singleton.cpp \
+    sqlform.cpp \
         tlcocalc.cpp \
     data_entry.cpp
 
@@ -46,6 +47,7 @@ HEADERS += \
         physiology.h \
         preclinic.h \
         singleton.h \
+    sqlform.h \
         tlcocalc.h \
     data_entry.h \
     ixtrak_options.h
@@ -56,6 +58,7 @@ FORMS += \
         insertphys.ui \
         mainwindow.ui \
         preclinic.ui \
+    sqlform.ui \
         tlcocalc.ui \
     data_entry.ui
 

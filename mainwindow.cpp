@@ -9,6 +9,7 @@
 #include "singleton.h"
 #include "data_entry.h"
 #include "ixtrak_options.h"
+#include "sqlform.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -233,4 +234,13 @@ void MainWindow::on_actionNew_interaction_triggered()
     de->exec();
     delete de;
     set_entry_logs();
+}
+
+void MainWindow::on_actionSQL_triggered()
+{
+    SQLform *sf;
+
+    sf = new SQLform(this);
+    sf->exec();
+    delete sf;
 }

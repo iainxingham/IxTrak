@@ -6,6 +6,7 @@
 #include <QDateTime>
 #include <QString>
 #include <QVariant>
+#include <QSqlRecord>
 #include <QDebug>
 
 const QString DRIVER("QSQLITE");
@@ -375,6 +376,29 @@ void Singleton::db_get_active_clinicians()
     }
 
     load_primary_clinician();
+}
+
+bool Singleton::db_run_sql(QString cmd, QStringList &result)
+{
+    QSqlQuery query;
+    int fields, i;
+    QString s1;
+
+    query.exec(cmd);
+    if(query.first() == false) return false;
+
+    fields = query.record().count();
+
+    do {
+        s1 = "";
+        for(i=0; i<fields; i++) {
+            s1 += query.value(i).toString();
+            s1 += " ";
+        }
+        result << s1;
+    } while(query.next());
+
+    return true;
 }
 
 void Singleton::populate_clinician_box(QComboBox *box)

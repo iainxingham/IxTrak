@@ -42,6 +42,7 @@ public:
     int db_get_or_add_rxr(QString rxr, QString nhs="NULL");
     int db_get_clinician_id(QString name);
     void db_get_active_clinicians();
+    bool db_run_sql(QString cmd, QStringList &result);
 
     void populate_clinician_box(QComboBox *box);
 

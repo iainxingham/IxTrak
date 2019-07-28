@@ -43,6 +43,8 @@ private slots:
 
     void on_actionNew_interaction_triggered();
 
+    void on_actionSQL_triggered();
+
 private:
     Ui::MainWindow *ui;
     void closeEvent(QCloseEvent *event);
