@@ -43,6 +43,7 @@ public:
     int db_get_clinician_id(QString name);
     void db_get_active_clinicians();
     bool db_run_sql(QString cmd, QStringList &result);
+    void db_vacuum();
 
     void populate_clinician_box(QComboBox *box);
 

@@ -69,6 +69,7 @@
      <string>Database</string>
     </property>
     <addaction name="actionSQL"/>
+    <addaction name="actionVacuum"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuInsert"/>
@@ -133,6 +134,11 @@
   <action name="actionSQL">
    <property name="text">
     <string>SQL</string>
+   </property>
+  </action>
+  <action name="actionVacuum">
+   <property name="text">
+    <string>Vacuum</string>
    </property>
   </action>
  </widget>

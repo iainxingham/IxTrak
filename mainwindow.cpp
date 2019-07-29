@@ -244,3 +244,16 @@ void MainWindow::on_actionSQL_triggered()
     sf->exec();
     delete sf;
 }
+
+void MainWindow::on_actionVacuum_triggered()
+{
+    QMessageBox::StandardButton msgbox = QMessageBox::question(this, "IxTrak - Clean database",
+                                                               "This will perform an SQLite VACUUM to clean the database.\n\nDo you want to continue?",
+                                                               QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+                                                               QMessageBox::Yes);
+    if(msgbox == QMessageBox::Yes) {
+        IxTrak->db_vacuum();
+        QMessageBox::information(this, "IxTrak - Clean database",
+                                 "Database cleaned.");
+    }
+}

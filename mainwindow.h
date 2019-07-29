@@ -45,6 +45,8 @@ private slots:
 
     void on_actionSQL_triggered();
 
+    void on_actionVacuum_triggered();
+
 private:
     Ui::MainWindow *ui;
     void closeEvent(QCloseEvent *event);

@@ -401,6 +401,13 @@ bool Singleton::db_run_sql(QString cmd, QStringList &result)
     return true;
 }
 
+void Singleton::db_vacuum()
+{
+    QSqlQuery query;
+
+    query.exec("VACUUM");
+}
+
 void Singleton::populate_clinician_box(QComboBox *box)
 {
     QList<Clinician>::iterator i;
