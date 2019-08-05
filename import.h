@@ -18,6 +18,8 @@ public:
 private slots:
     void on_nivImportButton_clicked();
 
+    void on_cpapImportButton_clicked();
+
 private:
     Ui::import *ui;
 };

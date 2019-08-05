@@ -47,6 +47,8 @@ public:
     void db_import_device(QString rxr, QString nhs, QString start, QString finish,
                           QString mode, QString serial, QString model);
     int db_get_device(QString serial);
+    bool db_pat_exists(QString rxr);
+    QString db_import_cpap(QString rxr, QString model, QString serial, QString mode, QString start, QString finish, QString make);
 
     void populate_clinician_box(QComboBox *box);
 

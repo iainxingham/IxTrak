@@ -426,7 +426,7 @@ void Singleton::db_import_device(QString rxr, QString nhs, QString start, QStrin
     }
 
     device_no = db_get_device(serial);
-    if(device_no == 0) {
+    if(device_no == -1) {
         query.prepare("INSERT INTO device (manufacturer, model, dev_type, serial_no) "
                       "VALUES (:company, :model, :machine, :serial)");
         query.bindValue(":company", (model == "A40") ? "Philips Respironics" : "ResMed");
@@ -435,7 +435,7 @@ void Singleton::db_import_device(QString rxr, QString nhs, QString start, QStrin
         query.bindValue(":serial", serial);
 
         query.exec();
-        query.exec("SELECT id FROM interaction WHERE ROWID = (SELECT last_insert_rowid())");
+        query.exec("SELECT id FROM device WHERE ROWID = (SELECT last_insert_rowid())");
         query.first();
         device_no = query.value(0).toInt();
     }
@@ -457,8 +457,48 @@ int Singleton::db_get_device(QString serial)
     query.prepare("SELECT id FROM device WHERE serial_no = :serial");
     query.bindValue(":serial", serial);
     query.exec();
-    if(query.first() == false) return 0;
+    if(query.first() == false) return -1;
     return query.value(0).toInt();
+}
+
+bool Singleton::db_pat_exists(QString rxr)
+{
+    if(!valid_rxr(rxr)) return false;
+    if(db_get_rxr(rxr) == -1) return false;
+
+    return true;
+}
+
+QString Singleton::db_import_cpap(QString rxr, QString model, QString serial, QString mode, QString start, QString finish, QString make)
+{
+    QSqlQuery query;
+    int device_no;
+
+    device_no = db_get_device(serial);
+    if(device_no == -1) {
+        query.prepare("INSERT INTO device (manufacturer, model, dev_type, serial_no) "
+                      "VALUES (:company, :model, :machine, :serial)");
+        query.bindValue(":company", make);
+        query.bindValue(":model", model);
+        query.bindValue(":machine", "CPAP");
+        query.bindValue(":serial", serial);
+
+        query.exec();
+        query.exec("SELECT id FROM device WHERE ROWID = (SELECT last_insert_rowid())");
+        query.first();
+        device_no = query.value(0).toInt();
+    }
+
+    query.prepare("INSERT INTO deployed_dev (pat_id, dev_id, issue_date, withdraw_date, dev_mode) "
+                  "VALUES (:pat, :dev, :issue, :withdraw, :mode)");
+    query.bindValue(":rxr", db_get_or_add_rxr(rxr));
+    query.bindValue(":dev", device_no);
+    query.bindValue(":issue", start);
+    query.bindValue(":withdraw", finish);
+    query.bindValue(":mode", mode);
+    query.exec();
+
+    return (rxr + "," + serial + "," + start + "," + finish);
 }
 
 void Singleton::populate_clinician_box(QComboBox *box)
