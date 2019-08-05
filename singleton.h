@@ -44,6 +44,9 @@ public:
     void db_get_active_clinicians();
     bool db_run_sql(QString cmd, QStringList &result);
     void db_vacuum();
+    void db_import_device(QString rxr, QString nhs, QString start, QString finish,
+                          QString mode, QString serial, QString model);
+    int db_get_device(QString serial);
 
     void populate_clinician_box(QComboBox *box);
 

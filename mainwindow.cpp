@@ -10,6 +10,7 @@
 #include "data_entry.h"
 #include "ixtrak_options.h"
 #include "sqlform.h"
+#include "import.h"
 
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -66,7 +67,11 @@ void MainWindow::on_actionBMI_triggered()
 
 void MainWindow::on_actionImport_triggered()
 {
-    QMessageBox::about(this, "IxTrak", "Import not implemented");
+    import *imp;
+
+    imp = new import(this);
+    imp->exec();
+    delete imp;
 }
 
 void MainWindow::on_actionQuit_triggered()

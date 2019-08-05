@@ -37,7 +37,8 @@ SOURCES += \
         singleton.cpp \
     sqlform.cpp \
         tlcocalc.cpp \
-    data_entry.cpp
+    data_entry.cpp \
+    import.cpp
 
 HEADERS += \
         bmicalc.h \
@@ -50,7 +51,8 @@ HEADERS += \
     sqlform.h \
         tlcocalc.h \
     data_entry.h \
-    ixtrak_options.h
+    ixtrak_options.h \
+    import.h
 
 FORMS += \
         bmicalc.ui \
@@ -60,7 +62,8 @@ FORMS += \
         preclinic.ui \
     sqlform.ui \
         tlcocalc.ui \
-    data_entry.ui
+    data_entry.ui \
+    import.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
