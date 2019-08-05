@@ -413,6 +413,18 @@ void Singleton::db_import_device(QString rxr, QString nhs, QString start, QStrin
     QSqlQuery query;
     int device_no;
 
+    if(serial == "") {
+        // Just add deployed_dev
+        query.prepare("INSERT INTO deployed_dev (pat_id, issue_date, withdraw_date, dev_mode) "
+                      "VALUES (:pat, :issue, :withdraw, :mode)");
+        query.bindValue(":rxr", db_get_or_add_rxr(rxr, nhs));
+        query.bindValue(":issue", start);
+        query.bindValue(":withdraw", finish);
+        query.bindValue(":mode", mode);
+        query.exec();
+        return;
+    }
+
     device_no = db_get_device(serial);
     if(device_no == 0) {
         query.prepare("INSERT INTO device (manufacturer, model, dev_type, serial_no) "

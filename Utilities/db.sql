@@ -28,6 +28,7 @@ CREATE TABLE device (id INTEGER PRIMARY KEY,
                      model TEXT,
                      dev_type TEXT,
                      serial_no TEXT,
+		     elht_no TEXT,
                      service_date TEXT);
                      
 CREATE TABLE deployed_dev (pat_id INTEGER,
