@@ -501,6 +501,31 @@ QString Singleton::db_import_cpap(QString rxr, QString model, QString serial, QS
     return (rxr + "," + serial + "," + start + "," + finish);
 }
 
+QString Singleton::db_import_ixtrak02(QString line)
+{
+    QSqlQuery query; // necessary?
+    QStringList vals;
+    int patid, interact_id;
+
+    vals = line.split(',');
+
+    if(vals[0] == "RXR") return "Ignoring header line";
+    if(!valid_rxr(vals[0])) return "Invalid RXR \"" + vals[0] + "\"";
+
+    patid = db_get_or_add_rxr(vals[0], vals[1]);
+    // create interaction, then add each investigation etc
+    interact_id = db_insert_interaction(vals[12], patid,
+                                        db_lookup_or_add("contact_types", vals[2]),
+                                        db_lookup_or_add("disp_types", vals[6]),
+                                        (vals[10] == "TRUE"),
+                                        (vals[8] == "TRUE"),
+                                        vals[11] == "FALSE" ? "me" : "junior NOS", // Plus call to db_get_clinician_id()
+                                        vals[3],
+                                        vals[7].toInt(),
+                                        vals[9]);
+
+}
+
 void Singleton::populate_clinician_box(QComboBox *box)
 {
     QList<Clinician>::iterator i;

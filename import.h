@@ -20,6 +20,8 @@ private slots:
 
     void on_cpapImportButton_clicked();
 
+    void on_ixtrakImportButton_clicked();
+
 private:
     Ui::import *ui;
 };

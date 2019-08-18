@@ -110,3 +110,56 @@ void import::on_cpapImportButton_clicked()
         }
     }
 }
+
+void import::on_ixtrakImportButton_clicked()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "Open csv to import", "", "csv files (*.csv)");
+    QMessageBox msg;
+    QStringList log;
+    QString line;
+    int count = -1;     // To deal with header line of CSV file
+
+    if(filename != "") {
+        QFile file(filename);
+        if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            msg.setWindowTitle("Import error");
+            msg.setText("Can't open file: " + filename);
+            msg.setIcon(QMessageBox::Warning);
+            msg.exec();
+        }
+
+        else {
+            QTextStream in(&file);
+            log << "Importing: " << filename;
+            while (!in.atEnd()) {
+                line = in.readLine();
+                log << IxTrak->db_import_ixtrak02(line);
+                ++count;
+            }
+            file.close();
+
+            QFile logfile("ixtrak02_import.log");
+            if(!logfile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                msg.setWindowTitle("Import log error");
+                msg.setText("Error with log file");
+                msg.setIcon(QMessageBox::Warning);
+                msg.exec();
+            }
+            else {
+                QTextStream out(&logfile);
+                for(int i=0; i<log.size(); ++i)
+                    out << log.at(i) << "\n";
+            }
+            logfile.close();
+
+            line = "Attempted imported of %1 IxTrak02 records. Details written to \"ixtrak02.log\", including any failed records";
+            line = line.arg(count);
+            msg.setWindowTitle("Import");
+            msg.setText(line);
+            msg.setIcon(QMessageBox::Information);
+            msg.exec();
+        }
+
+    }
+
+}
